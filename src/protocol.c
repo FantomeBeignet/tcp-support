@@ -11,11 +11,13 @@ uint16_t unpack_uint16(char *buffer) {
 }
 
 int rightpad(char *buffer, int l) {
-	size_t buflen = strlen(buffer);
-	if (buflen > l) return -1;
-	if (buflen ==  l) return 0;
-	for (int i = buflen; i < l; i++) {
-		buffer[i] = '\0';
-	}
-	return (l - buflen);
+  size_t buflen = strlen(buffer);
+  if (buflen > l)
+    return -1;
+  if (buflen == l)
+    return 0;
+  for (int i = buflen; i < l; i++) {
+    buffer[i] = '\0';
+  }
+  return (l - buflen);
 }
