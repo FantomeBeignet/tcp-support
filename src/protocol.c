@@ -10,13 +10,13 @@ uint16_t unpack_uint16(char *buffer) {
   return ((uint16_t)buffer[0] << 8) | buffer[1];
 }
 
-char *rightpad(const char *s, int l) {
+char *rightpad(const char *s, size_t l) {
   size_t slen = strlen(s);
   if (slen > l)
     return NULL;
   char *ret = calloc(l, sizeof(char));
   memcpy(ret, s, slen);
-  for (int i = slen; i < l; i++) {
+  for (size_t i = slen; i < l; i++) {
     ret[i] = '\0';
   }
   return ret;
