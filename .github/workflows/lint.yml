@@ -16,6 +16,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
       - name: Update
-        run: apt update && apt upgrade -y && apt install clang clang-format
+        run: sudo apt update && sudo apt upgrade -y && sudo apt install clang clang-format
       - name: Run clang-format
         run: clang-format -i -Werror src/*.c src/*.h
