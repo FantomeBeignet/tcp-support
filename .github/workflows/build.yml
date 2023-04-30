@@ -1,4 +1,4 @@
-name: Lint
+name: Build
 
 on:
   push:
@@ -15,7 +15,5 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Update
-        run: sudo apt update && sudo apt upgrade -y && sudo apt install clang clang-format
-      - name: Run clang-format
-        run: clang-format -i -Werror src/*.c src/*.h
+      - name: Make
+        run: make BUILD=debug
