@@ -17,8 +17,8 @@ TESTS=$(TEST_OBJS:.o=.exe)
 
 all: $(OBJS)
 
-$(TESTS): $(TEST_OBJS)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $< -o $@
+$(TESTS): $(TEST_OBJS) $(OBJS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 test: $(TESTS)
 	for test in $(TESTS); do $$test; done
