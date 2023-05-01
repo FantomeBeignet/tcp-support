@@ -7,7 +7,7 @@ void pack_uint16(char *buffer, uint16_t i) {
 }
 
 uint16_t unpack_uint16(char *buffer) {
-  return ((uint16_t)buffer[0] << 8) | buffer[1];
+  return ntohs(((uint16_t)buffer[0] << 8) | buffer[1]);
 }
 
 char *rightpad(const char *s, size_t l) {
