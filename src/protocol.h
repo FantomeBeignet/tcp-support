@@ -13,6 +13,12 @@ typedef struct proto_msg {
   char *content;
 } proto_msg;
 
+void pack_uint16(char *buffer, uint16_t i);
+
+uint16_t unpack_uint16(char *buffer);
+
+char *rightpad(const char *s, size_t l);
+
 void pack_msg(char *buffer, const char *msg_type, const char *sender_uname,
               const char *content);
 proto_msg *unpack_msg(char *buffer, uint16_t msg_size);
