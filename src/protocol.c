@@ -29,9 +29,9 @@ void pack_msg(char *buffer, const char *msg_type, const char *sender_uname,
     perror("Error padding username");
   size_t msglen = strlen(content) + 1;
   pack_uint16(buffer, msglen);
-  memcpy(buffer + 16, msg_type, 4);
-  memcpy(buffer + 20, padded_uname, 32);
-  memcpy(buffer + 52, content, strlen(content));
+  memcpy(buffer + 2, msg_type, 4);
+  memcpy(buffer + 6, padded_uname, 32);
+  memcpy(buffer + 38, content, strlen(content));
   buffer[msglen - 1] = '\0';
 }
 
