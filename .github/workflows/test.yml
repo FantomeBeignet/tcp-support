@@ -1,4 +1,4 @@
-name: Build
+name: Test
 
 on:
   push:
@@ -10,10 +10,10 @@ on:
 
 jobs:
   lint:
-    name: Check build
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Make
-        run: make BUILD=debug
+      - name: Run tests
+        run: make test BUILD=debug
