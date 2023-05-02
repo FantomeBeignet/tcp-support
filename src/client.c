@@ -1,27 +1,6 @@
-#include <arpa/inet.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <ifaddrs.h>
-#include <memory.h>
-#include <net/if.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "client.h"
 
-#define SERV_PORT 8888
-
-int main(int argc, char *argv[]) {
-  (void)argc;
-  (void)argv;
+int client() {
   int clientSocket;
   if ((clientSocket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
     perror("error opening socket");
