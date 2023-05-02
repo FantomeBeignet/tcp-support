@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/socket.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -31,7 +32,7 @@ int main(int argc, char *argv[]) {
   serv_addr.sin_family = AF_INET;
 
   serv_addr.sin_port = htons(SERV_PORT);
-  serv_addr.sin_addr.s_addr = inet_aaddr("127.0.0.1");
+  serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
   if (connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
       0) {
     perror("Erreur à la connexion");
