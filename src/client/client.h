@@ -19,4 +19,3 @@
 
 #define SERV_PORT 8888
 
-int client();

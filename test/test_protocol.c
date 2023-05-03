@@ -1,4 +1,4 @@
-#include "../src/protocol.h"
+#include "../src/common/protocol.h"
 #include <assert.h>
 #include <netinet/in.h>
 #include <stdint.h>

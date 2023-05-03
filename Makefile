@@ -8,16 +8,30 @@ cflags.release := -O2
 cflags.debug := -Werror -O0
 CFLAGS+=$(CPPFLAGS) ${cflags.common} ${cflags.${BUILD}}
 
-SRCS=$(wildcard src/*.c)
-OBJS=$(SRCS:.c=.o)
+COMMON_SRC=$(wildcard src/common/*.c)
+COMMON_OBJS=$(COMMON_SRC:.c=.o)
 
-TEST_SRCS=$(wildcard test/*.c)
+CLIENT_SRC=$(wildcard src/client/*.c)
+CLIENT_OBJS=$(CLIENT_SRC:.c=.o)
+CLIENT_OUT=client
+
+SRCS=$(COMMON_SRC) $(CLIENT_SRC)
+OBJS=$(COMMON_OBJS) $(CLIENT_OBJS)
+
+TEST_SRCS=test/test_protocol.c
 TEST_OBJS=$(TEST_SRCS:.c=.o)
 TESTS=$(TEST_OBJS:.o=.exe)
 
-all: $(OBJS)
+OUT=$(CLIENT_OUT)
 
-$(TESTS): $(TEST_OBJS) $(OBJS)
+all: common client
+
+common: $(COMMON_OBJS)
+
+client: $(CLIENT_OBJS) $(COMMON_OBJS)
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $(CLIENT_OUT)
+
+test/test_protocol.exe: test/test_protocol.o src/common/protocol.o
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@
 
 test: $(TESTS)

@@ -1,6 +1,8 @@
 #include "client.h"
 
-int client() {
+int main(int argc, char *argv[]) {
+  (void)argc;
+  (void)argv;
   int clientSocket;
   if ((clientSocket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
     perror("error opening socket");
@@ -47,4 +49,5 @@ int client() {
     }
   }
   close(clientSocket);
+  return EXIT_SUCCESS;
 }
