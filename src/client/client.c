@@ -1,8 +1,21 @@
 #include "client.h"
 
 int main(int argc, char *argv[]) {
-  (void)argc;
-  (void)argv;
+  if (argc < 3) {
+    fprintf(stderr, "Usage : ./client <server_adress> <server_port>\n");
+    exit(1);
+  }
+  char *serv_adress = argv[1];
+  char *end;
+  unsigned long serv_port = strtoul(argv[2], &end, 10);
+  if (strcmp(end, "\0")) {
+    fprintf(stderr, "%s is not a valid port number", argv[2]);
+    exit(1);
+  }
+  if (serv_port > 65535) {
+    fprintf(stderr, "%lu is not a valid port number", serv_port);
+    exit(1);
+  }
   int clientSocket;
   if ((clientSocket = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
     perror("error opening socket");
@@ -12,8 +25,8 @@ int main(int argc, char *argv[]) {
   bzero((char *)&serv_addr, sizeof(serv_addr));
   serv_addr.sin_family = AF_INET;
 
-  serv_addr.sin_port = htons(SERV_PORT);
-  serv_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  serv_addr.sin_port = htons(serv_port);
+  serv_addr.sin_addr.s_addr = inet_addr(serv_adress);
   if (connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
       0) {
     perror("Erreur à la connexion");
