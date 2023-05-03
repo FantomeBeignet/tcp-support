@@ -17,5 +17,3 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#define SERV_PORT 8888
-
