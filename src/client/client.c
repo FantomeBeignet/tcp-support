@@ -28,22 +28,40 @@ int main(int argc, char *argv[]) {
   serv_addr.sin_port = htons(serv_port);
   serv_addr.sin_addr.s_addr = inet_addr(serv_adress);
   char username[32];
+  char role[4];
   if (connect(clientSocket, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) <
       0) {
     perror("Erreur à la connexion");
     exit(1);
-  } else {
-    printf("Entrez un nom d'utilisateur : ");
-    if (!fgets(username, 32, stdin)) {
-      perror("Veuillez rentrer un nom d'utilisateur.");
-      exit(1);
-    }
-    username[strcspn(username, "\r\n")] = 0;
-    if (!strcmp(username, "\0")) {
-      perror("Veuillez rentrer un nom d'utilisateur.");
-      exit(1);
-    }
   }
+  printf("Entrez un nom d'utilisateur : ");
+  if (!fgets(username, 32, stdin)) {
+    perror("Veuillez rentrer un nom d'utilisateur.");
+    exit(1);
+  }
+  username[strcspn(username, "\r\n")] = 0;
+  if (!strcmp(username, "\0")) {
+    perror("Veuillez rentrer un nom d'utilisateur.");
+    exit(1);
+  }
+  printf("Se connecter en temps que :\n1: Client\n2: Agent de niveau 2\n3: "
+         "Agent de niveau 3\n");
+  int role_num = getchar() - 48;
+  switch (role_num) {
+    case 1:
+      strcpy(role, "cli");
+      break;
+    case 2:
+      strcpy(role, "ag2");
+      break;
+    case 3:
+      strcpy(role, "ag3");
+      break;
+    default:
+      fprintf(stderr, "%d n'est pas un numéro de rôle valide\n", role_num);
+      exit(1);
+  }
+  printf("role: %s\n", role);
   while (1) {
     char buffer[1024];
     int n;
