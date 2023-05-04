@@ -1,5 +1,11 @@
 #include "client.h"
 
+void flush_stdin() {
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF)
+    ;
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 3) {
     fprintf(stderr, "Usage : ./client <server_adress> <server_port>\n");
@@ -62,9 +68,8 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
   char mk_buffer[1024], send_buffer[2048], recv_buffer[2048];
-  int c;
-  while ((c = getchar()) != '\n' && c != EOF)
-    ;
+  flush_stdin();
+  memset(send_buffer, 0, 2048);
   pack_msg(send_buffer, "con", username, role);
   if (send(clientSocket, send_buffer, 2 + 4 + 32 + 3, 0) < 0) {
     perror("Erreur à l'envoi");

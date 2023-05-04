@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   char remoteIP[INET6_ADDRSTRLEN];
 
   int yes = 1; // for setsockopt() SO_REUSEADDR, below
-  int i, j, rv;
+  int i, rv;
 
   struct addrinfo hints, *ai, *p;
 
@@ -93,6 +93,10 @@ int main(int argc, char *argv[]) {
   // keep track of the biggest file descriptor
   fdmax = listener; // so far, it's this one
 
+  int clients[MAX_USERS + 3] = {0};
+  int experts_lvl2_available[MAX_USERS + 3] = {0};
+  int experts_lvl3_available[MAX_USERS + 3] = {0};
+
   // main loop
   for (;;) {
     read_fds = master; // copy it
@@ -141,13 +145,34 @@ int main(int argc, char *argv[]) {
             memset(buf, 0, 2048);
             nbytes = recv(i, buf, 4 + 32 + msg_size, 0);
             proto_msg *unpacked_msg = unpack_msg(buf, msg_size);
-            printf("%s\n", unpacked_msg->content);
-            for (j = 0; j <= fdmax; j++) {
-              // send to everyone!
-              if (FD_ISSET(j, &master)) {
-                // except the listener and ourselves
-                if (j != listener && j != i) {
-                  if (send(j, buf, nbytes, 0) == -1) {
+            if (strcmp(unpacked_msg->msg_type, "con") == 0) {
+              char *content = unpacked_msg->content;
+              if (strcmp(content, "ag2") == 0) {
+                experts_lvl2_available[i] = 1;
+              } else if (strcmp(content, "ag3") == 0) {
+                experts_lvl3_available[i] = 1;
+              } else {
+                clients[i] = 1;
+              }
+            } else if (strcmp(unpacked_msg->msg_type, "msg") == 0) {
+              if (clients[i] == 1) {
+                // Connected to BOT
+                if (FD_ISSET(i, &master)) {
+                  char *automatic_answer = "Dites m'en plus...";
+                  char buff[2048];
+                  pack_msg(buff, "msg", "BOT", automatic_answer);
+                  if (send(i, buff, 2 + 4 + 32 + strlen(automatic_answer), 0) ==
+                      -1) {
+                    perror("send");
+                  }
+                }
+              } else {
+                int target_fd = relationship[i];
+                if (FD_ISSET(target_fd, &master)) {
+                  char sendbuf[2048];
+                  pack_uint16(sendbuf, msg_size);
+                  memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
+                  if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
                     perror("send");
                   }
                 }
