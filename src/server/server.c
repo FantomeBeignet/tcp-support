@@ -9,6 +9,15 @@ void *get_in_addr(struct sockaddr *sa) {
   return &(((struct sockaddr_in6 *)sa)->sin6_addr);
 }
 
+int available_expert(int *experts_list) {
+  for (int i = 0; i < (sizeof(experts_list) / sizeof(int)); i++) {
+    if (experts_list[i] == 0)
+      return i;
+    else
+      return -1; // NO EXPERTS AVAILABLE
+  }
+}
+
 int main(int argc, char *argv[]) {
   if (argc < 2) {
     fprintf(stderr, "Usage : ./server <server_port>\n");
@@ -166,15 +175,25 @@ int main(int argc, char *argv[]) {
                     perror("send");
                   }
                 }
-              } else {
-                int target_fd = relationship[i];
-                if (FD_ISSET(target_fd, &master)) {
-                  char sendbuf[2048];
-                  pack_uint16(sendbuf, msg_size);
-                  memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
-                  if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
-                    perror("send");
-                  }
+              }
+            } else if (strcmp(unpacked_msg->msg_type, "esc") == 0) {
+              if (clients[i] == 1) {
+                clients[i]++;
+                int expert = available_expert(experts_lvl2_available);
+                add_connection(i, expert);
+              } else if (clients[i] == 2) {
+                clients[i]++;
+                int expert = available_expert(experts_lvl3_available);
+                update_connection(i, expert);
+              }
+            } else {
+              int target_fd = relationship[i];
+              if (FD_ISSET(target_fd, &master)) {
+                char sendbuf[2048];
+                pack_uint16(sendbuf, msg_size);
+                memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
+                if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
+                  perror("send");
                 }
               }
             }
@@ -183,6 +202,5 @@ int main(int argc, char *argv[]) {
       }
     }
   }
-
   return 0;
 }
