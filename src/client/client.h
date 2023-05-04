@@ -1,3 +1,6 @@
+#ifndef __CLIENT_H__
+#define __CLIENT_H__
+
 #include <arpa/inet.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -17,3 +20,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "../common/protocol.h"
+
+#endif // !__CLIENT_H__
