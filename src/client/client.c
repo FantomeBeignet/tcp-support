@@ -63,13 +63,20 @@ int main(int argc, char *argv[]) {
   }
   char mk_buffer[1024], send_buffer[2048], recv_buffer[2048];
   int c;
-  while ((c = getchar()) != '\n' && c != EOF);
+  while ((c = getchar()) != '\n' && c != EOF)
+    ;
+  pack_msg(send_buffer, "con", username, role);
+  if (send(clientSocket, send_buffer, 2 + 4 + 32 + 3, 0) < 0) {
+    perror("Erreur à l'envoi");
+    exit(1);
+  }
   if (role_num == 1) {
     printf("Message : ");
     fgets(mk_buffer, 1024, stdin);
     memset(send_buffer, 0, 2048);
     pack_msg(send_buffer, "msg", username, mk_buffer);
-    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) < 0) {
+    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) <
+        0) {
       perror("Erreur à l'envoi");
       exit(1);
     }
@@ -91,7 +98,8 @@ int main(int argc, char *argv[]) {
     printf("Message : ");
     fgets(mk_buffer, 1024, stdin);
     pack_msg(send_buffer, "msg", username, mk_buffer);
-    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) < 0) {
+    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) <
+        0) {
       perror("Erreur à l'envoi");
       exit(1);
     }
