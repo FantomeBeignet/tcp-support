@@ -32,7 +32,7 @@ void pack_msg(char *buffer, const char *msg_type, const char *sender_uname,
   memcpy(buffer + 2, msg_type, 4);
   memcpy(buffer + 6, padded_uname, 32);
   memcpy(buffer + 38, content, strlen(content));
-  buffer[msglen - 1] = '\0';
+  buffer[msglen + 4 + 32 + 1] = '\0';
 }
 
 proto_msg *unpack_msg(char *buffer, uint16_t msg_size) {
