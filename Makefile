@@ -16,7 +16,7 @@ CLIENT_OBJS=$(CLIENT_SRC:.c=.o)
 CLIENT_OUT=client
 
 SERVER_SRC=$(wildcard src/server/*.c)
-SERVER_OBJS=$(CLIENT_SRC:.c=.o)
+SERVER_OBJS=$(SERVER_SRC:.c=.o)
 SERVER_OUT=server
 
 SRCS=$(COMMON_SRC) $(CLIENT_SRC) $(SERVER_SRC)
@@ -35,7 +35,7 @@ common: $(COMMON_OBJS)
 client: $(CLIENT_OBJS) $(COMMON_OBJS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $(CLIENT_OUT)
 
-serber: $(SERVER_OBJS) $(COMMON_OBJS)
+server: $(SERVER_OBJS) $(COMMON_OBJS)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $(SERVER_OUT)
 
 test/test_protocol.exe: test/test_protocol.o src/common/protocol.o
