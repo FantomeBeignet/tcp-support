@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
                   char sendbuf[2048];
                   pack_uint16(sendbuf, msg_size);
                   memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
-                  if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
+                  if (send(target_fd, sendbuf, 2 + 4 + 32 + msg_size, 0) == -1) {
                     perror("send");
                   }
                 }
