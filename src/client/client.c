@@ -102,7 +102,10 @@ int main(int argc, char *argv[]) {
     printf("%s: %s\n", unpacked_msg->sender_uname, unpacked_msg->content);
     printf("Message : ");
     fgets(mk_buffer, 1024, stdin);
-    pack_msg(send_buffer, "msg", username, mk_buffer);
+    if (!strcmp(mk_buffer, "escalate"))
+      pack_msg(send_buffer, "esc", username, mk_buffer);
+    else
+      pack_msg(send_buffer, "msg", username, mk_buffer);
     if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) <
         0) {
       perror("Erreur à l'envoi");
