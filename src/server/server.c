@@ -137,6 +137,7 @@ int main(int argc, char *argv[]) {
             FD_CLR(i, &master); // remove from master set
           } else {
             // we got some data from a client
+            printf("received %d bytes\n", nbytes);
             for (j = 0; j <= fdmax; j++) {
               // send to everyone!
               if (FD_ISSET(j, &master)) {

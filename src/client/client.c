@@ -48,31 +48,50 @@ int main(int argc, char *argv[]) {
          "Agent de niveau 3\n");
   int role_num = getchar() - 48;
   switch (role_num) {
-    case 1:
-      strcpy(role, "cli");
-      break;
-    case 2:
-      strcpy(role, "ag2");
-      break;
-    case 3:
-      strcpy(role, "ag3");
-      break;
-    default:
-      fprintf(stderr, "%d n'est pas un numéro de rôle valide\n", role_num);
-      exit(1);
+  case 1:
+    strcpy(role, "cli");
+    break;
+  case 2:
+    strcpy(role, "ag2");
+    break;
+  case 3:
+    strcpy(role, "ag3");
+    break;
+  default:
+    fprintf(stderr, "%d n'est pas un numéro de rôle valide\n", role_num);
+    exit(1);
   }
-  printf("role: %s\n", role);
+  char mk_buffer[1024], send_buffer[2048], recv_buffer[2048];
+  int c;
+  while ((c = getchar()) != '\n' && c != EOF);
+  if (role_num == 1) {
+    printf("Message : ");
+    fgets(mk_buffer, 1024, stdin);
+    memset(send_buffer, 0, 2048);
+    pack_msg(send_buffer, "msg", username, mk_buffer);
+    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) < 0) {
+      perror("Erreur à l'envoi");
+      exit(1);
+    }
+  }
   while (1) {
-    char buffer[1024];
+    uint16_t msg_size;
     int n;
-    if ((n = recv(clientSocket, buffer, sizeof(buffer), 0)) < 0) {
+    if ((n = recv(clientSocket, recv_buffer, 2, 0)) < 0) {
       perror("Erreur à la réception");
       exit(1);
     }
-    buffer[n] = '\0';
-    printf("%s", buffer);
-    fgets(buffer, 1024, stdin);
-    if (send(clientSocket, buffer, strlen(buffer), 0) < 0) {
+    msg_size = unpack_uint16(recv_buffer);
+    if ((n = recv(clientSocket, recv_buffer, 4 + 32 + msg_size, 0)) < 0) {
+      perror("Erreur à la réception");
+      exit(1);
+    }
+    proto_msg *unpacked_msg = unpack_msg(recv_buffer, msg_size);
+    printf("%s: %s\n", unpacked_msg->sender_uname, unpacked_msg->content);
+    printf("Message : ");
+    fgets(mk_buffer, 1024, stdin);
+    pack_msg(send_buffer, "msg", username, mk_buffer);
+    if (send(clientSocket, send_buffer, 2 + 4 + 32 + strlen(mk_buffer), 0) < 0) {
       perror("Erreur à l'envoi");
       exit(1);
     }
