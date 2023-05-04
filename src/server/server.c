@@ -24,16 +24,16 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "%lu is not a valid port number", serv_port);
     exit(1);
   }
-  fd_set master;   // master file descriptor list
-  fd_set read_fds; // temp file descriptor list for select()
-  int fdmax;       // maximum file descriptor number
+  fd_set master;                      // master file descriptor list
+  fd_set read_fds;                    // temp file descriptor list for select()
+  int fdmax;                          // maximum file descriptor number
 
   int listener;                       // listening socket descriptor
   int newfd;                          // newly accept()ed socket descriptor
   struct sockaddr_storage remoteaddr; // client address
   socklen_t addrlen;
 
-  char buf[256]; // buffer for client data
+  char buf[2048]; // buffer for client data
   int nbytes;
 
   char remoteIP[INET6_ADDRSTRLEN];
@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
           }
         } else {
           // handle data from a client
-          if ((nbytes = recv(i, buf, sizeof buf, 0)) <= 0) {
+          if ((nbytes = recv(i, buf, 2, 0)) <= 0) {
             // got error or connection closed by client
             if (nbytes == 0) {
               // connection closed
@@ -137,7 +137,11 @@ int main(int argc, char *argv[]) {
             FD_CLR(i, &master); // remove from master set
           } else {
             // we got some data from a client
-            printf("received %d bytes\n", nbytes);
+            u_int16_t msg_size = unpack_uint16(buf);
+            memset(buf, 0, 2048);
+            nbytes = recv(i, buf, 4 + 32 + msg_size, 0);
+            proto_msg *unpacked_msg = unpack_msg(buf, msg_size);
+            printf("%s\n", unpacked_msg->content);
             for (j = 0; j <= fdmax; j++) {
               // send to everyone!
               if (FD_ISSET(j, &master)) {
