@@ -10,12 +10,11 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 int available_expert(int *experts_list) {
-  for (int i = 0; i < (sizeof(experts_list) / sizeof(int)); i++) {
+  for (int i = 0; i < MAX_USERS + 3; i++) {
     if (experts_list[i] == 0)
       return i;
-    else
-      return -1; // NO EXPERTS AVAILABLE
   }
+  return -1;
 }
 
 int main(int argc, char *argv[]) {
@@ -102,9 +101,14 @@ int main(int argc, char *argv[]) {
   // keep track of the biggest file descriptor
   fdmax = listener; // so far, it's this one
 
-  int clients[MAX_USERS + 3] = {0};
-  int experts_lvl2_available[MAX_USERS + 3] = {0};
-  int experts_lvl3_available[MAX_USERS + 3] = {0};
+  int clients[MAX_USERS + 3];
+  int experts_lvl2_available[MAX_USERS + 3];
+  int experts_lvl3_available[MAX_USERS + 3];
+  int relationship[MAX_USERS + 3];
+
+  memset(clients, 1, MAX_USERS + 3);
+  memset(experts_lvl2_available, -1, MAX_USERS + 3);
+  memset(experts_lvl3_available, -1, MAX_USERS + 3);
 
   // main loop
   for (;;) {
@@ -157,9 +161,9 @@ int main(int argc, char *argv[]) {
             if (strcmp(unpacked_msg->msg_type, "con") == 0) {
               char *content = unpacked_msg->content;
               if (strcmp(content, "ag2") == 0) {
-                experts_lvl2_available[i] = 1;
+                experts_lvl2_available[i] = 0;
               } else if (strcmp(content, "ag3") == 0) {
-                experts_lvl3_available[i] = 1;
+                experts_lvl3_available[i] = 0;
               } else {
                 clients[i] = 1;
               }
@@ -175,24 +179,42 @@ int main(int argc, char *argv[]) {
                     perror("send");
                   }
                 }
+              } else {
+                int target_fd = relationship[i];
+                if (FD_ISSET(target_fd, &master)) {
+                  char sendbuf[2048];
+                  pack_uint16(sendbuf, msg_size);
+                  memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
+                  if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
+                    perror("send");
+                  }
+                }
               }
             } else if (strcmp(unpacked_msg->msg_type, "esc") == 0) {
+              int expert = -1;
               if (clients[i] == 1) {
                 clients[i]++;
-                int expert = available_expert(experts_lvl2_available);
-                add_connection(i, expert);
+                expert = available_expert(experts_lvl2_available);
+                add_connection(relationship, i, expert);
               } else if (clients[i] == 2) {
                 clients[i]++;
-                int expert = available_expert(experts_lvl3_available);
-                update_connection(i, expert);
+                expert = available_expert(experts_lvl3_available);
+                update_connection(relationship, i, expert);
               }
-            } else {
-              int target_fd = relationship[i];
-              if (FD_ISSET(target_fd, &master)) {
-                char sendbuf[2048];
-                pack_uint16(sendbuf, msg_size);
-                memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
-                if (send(target_fd, sendbuf, 4 + 32 + msg_size, 0) == -1) {
+              if (expert < 0) {
+                char *no_expert = "Pas d'expert de disponibles, désolé";
+                char buff[2048];
+                pack_msg(buff, "msg", "BOT", no_expert);
+                if (send(i, buff, 2 + 4 + 32 + strlen(no_expert), 0) == -1) {
+                  perror("send");
+                }
+              } else {
+                printf("%d\n", expert);
+                char *transaction = "Client en approche !";
+                char buff[2048];
+                pack_msg(buff, "msg", "BOT", transaction);
+                if (send(expert, buff, 2 + 4 + 32 + strlen(transaction), 0) ==
+                    -1) {
                   perror("send");
                 }
               }

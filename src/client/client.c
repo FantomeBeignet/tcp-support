@@ -99,9 +99,13 @@ int main(int argc, char *argv[]) {
       exit(1);
     }
     proto_msg *unpacked_msg = unpack_msg(recv_buffer, msg_size);
+    memset(recv_buffer, 0, 2048);
     printf("%s: %s\n", unpacked_msg->sender_uname, unpacked_msg->content);
     printf("Message : ");
+    memset(mk_buffer, 0, 1024);
     fgets(mk_buffer, 1024, stdin);
+    mk_buffer[strcspn(mk_buffer, "\r\n")] = 0;
+    printf("mk_buffer : %s\n", mk_buffer);
     if (!strcmp(mk_buffer, "escalate"))
       pack_msg(send_buffer, "esc", username, mk_buffer);
     else

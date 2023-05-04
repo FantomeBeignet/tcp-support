@@ -6,14 +6,12 @@
 
 #define MAX_USERS 24
 
-static int relationship[MAX_USERS + 3] = {0};
+void init_relationship(int *relationship);
 
-void init_relationship();
+void add_connection(int *relationship, int i, int j);
 
-void add_connection(int i, int j);
+void remove_connection(int *relationship, int i, int j);
 
-void remove_connection(int i, int j);
-
-void update_connection(int i, int j);
+void update_connection(int *relationship, int i, int j);
 
 #endif // __RELATIONSHIP_H__
