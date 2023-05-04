@@ -6,7 +6,7 @@
 
 #define MAX_USERS 24
 
-int relationship[MAX_USERS];
+static int relationship[MAX_USERS];
 
 void init_relationship();
 
