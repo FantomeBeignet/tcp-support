@@ -3,7 +3,7 @@ BUILD := release
 CC=/usr/bin/clang
 LDFLAGS=-L/lib 
 CPPFLAGS=-I/include
-cflags.common := -std=c99 -Wall -Wextra -pedantic -fdiagnostics-color=always
+cflags.common := -std=gnu99 -Wall -Wextra -pedantic -fdiagnostics-color=always
 cflags.release := -O2
 cflags.debug := -Werror -O0
 CFLAGS+=$(CPPFLAGS) ${cflags.common} ${cflags.${BUILD}}
