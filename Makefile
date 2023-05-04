@@ -26,7 +26,7 @@ TEST_SRCS=test/test_protocol.c
 TEST_OBJS=$(TEST_SRCS:.c=.o)
 TESTS=$(TEST_OBJS:.o=.exe)
 
-OUT=$(CLIENT_OUT)
+OUT=$(CLIENT_OUT) $(SERVER_OUT)
 
 all: common client server
 
