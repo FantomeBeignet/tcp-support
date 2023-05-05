@@ -25,11 +25,11 @@ int main(int argc, char *argv[]) {
   char *end;
   unsigned long serv_port = strtoul(argv[1], &end, 10);
   if (strcmp(end, "\0")) {
-    fprintf(stderr, "%s is not a valid port number", argv[1]);
+    fprintf(stderr, "%s n'est pas un numéro de port valide", argv[1]);
     exit(1);
   }
   if (serv_port > 65535) {
-    fprintf(stderr, "%lu is not a valid port number", serv_port);
+    fprintf(stderr, "%lu n'est pas un numéro de port valide", serv_port);
     exit(1);
   }
   fd_set master;                      // master file descriptor list
@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 
   // if we got here, it means we didn't get bound
   if (p == NULL) {
-    fprintf(stderr, "selectserver: failed to bind\n");
+    fprintf(stderr, "selectserver: bind échoué\n");
     exit(2);
   }
 
@@ -133,8 +133,8 @@ int main(int argc, char *argv[]) {
             if (newfd > fdmax) {    // keep track of the max
               fdmax = newfd;
             }
-            printf("selectserver: new connection from %s on "
-                   "socket %d\n",
+            printf("selectserver: Nouvelle connexion de %s sur "
+                   "le socket %d\n",
                    inet_ntop(remoteaddr.ss_family,
                              get_in_addr((struct sockaddr *)&remoteaddr),
                              remoteIP, INET6_ADDRSTRLEN),
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
             // got error or connection closed by client
             if (nbytes == 0) {
               // connection closed
-              printf("selectserver: socket %d hung up\n", i);
+              printf("selectserver: le socket %d a raccroché\n", i);
             } else {
               perror("recv");
             }

@@ -46,8 +46,8 @@ Once you have the server and the client running, you'll be asked to enter a user
 #### Client
 
 If you're a client, you'll be asked to enter a message to send to the server. Then a BOT will answer you. You can then continue asking the BOT questions. 
-If the BOT cannot help you, he'll tell you to type in `escalate` to talk to a level 2 agent. 
-When talking to a level 2 agent, you'll be talking to a real human (if a level 2 agent is connected). You can then ask him questions. If his answers are not enough, you can then type `escalate` again to talk to a level 3 agent (if there is one connected and available). 
+If the BOT cannot help you, he'll tell you to type in `superieur` to talk to a level 2 agent. 
+When talking to a level 2 agent, you'll be talking to a real human (if a level 2 agent is connected). You can then ask him questions. If his answers are not enough, you can then type `superieur` again to talk to a level 3 agent (if there is one connected and available). 
 
 ##### BOT answers 
 
@@ -59,5 +59,5 @@ The BOT is able to answer if your message contains one of the following words:
 
 #### Level 2/3 agent
 
-You'll have to wait until a client contacts you. Then you'll be able to exchange messages with him. If you don't know the answer to his question, you can tell him to type `escalate` to talk to a level 3 agent (if there is one connected and available).
+You'll have to wait until a client contacts you. Then you'll be able to exchange messages with him. If you don't know the answer to his question, you can tell him to type `superieur` to talk to a level 3 agent (if there is one connected and available).
 

@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
   char *end;
   unsigned long serv_port = strtoul(argv[2], &end, 10);
   if (strcmp(end, "\0")) {
-    fprintf(stderr, "%s is not a valid port number", argv[2]);
+    fprintf(stderr, "%s n'est pas un numéro de port valide", argv[2]);
     exit(1);
   }
   if (serv_port > 65535) {
-    fprintf(stderr, "%lu is not a valid port number", serv_port);
+    fprintf(stderr, "%lu n'est pas un numéro de port valide", serv_port);
     exit(1);
   }
   int clientSocket;
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     memset(mk_buffer, 0, 1024);
     fgets(mk_buffer, 1024, stdin);
     mk_buffer[strcspn(mk_buffer, "\r\n")] = 0;
-    if (!strcmp(mk_buffer, "escalate"))
+    if (!strcmp(mk_buffer, "superieur"))
       pack_msg(send_buffer, "esc", username, mk_buffer);
     else
       pack_msg(send_buffer, "msg", username, mk_buffer);

@@ -26,7 +26,7 @@ void pack_msg(char *buffer, const char *msg_type, const char *sender_uname,
               const char *content) {
   const char *padded_uname = rightpad(sender_uname, 32);
   if (!padded_uname)
-    perror("Error padding username");
+    perror("Erreur lors du padding du nom d'utilisateur");
   size_t msglen = strlen(content) + 1;
   pack_uint16(buffer, msglen);
   memcpy(buffer + 2, msg_type, 4);
@@ -38,7 +38,8 @@ void pack_msg(char *buffer, const char *msg_type, const char *sender_uname,
 proto_msg *unpack_msg(char *buffer, uint16_t msg_size) {
   proto_msg *ret = calloc(1, sizeof(proto_msg));
   if (!ret)
-    perror("Could not allocate space to unpack message");
+    perror("Erreur : L'espace mémoire pour unpack le message n'a pas pu être "
+           "alloué");
   char *msg_type = calloc(4, sizeof(char));
   char *sender_uname = calloc(32, sizeof(char));
   char *content = calloc(msg_size, sizeof(char));
