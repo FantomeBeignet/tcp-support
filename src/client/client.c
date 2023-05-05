@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
     memset(mk_buffer, 0, 1024);
     fgets(mk_buffer, 1024, stdin);
     mk_buffer[strcspn(mk_buffer, "\r\n")] = 0;
-    if (!strcmp(mk_buffer, "escalate"))
+    if (!strcmp(mk_buffer, "superieur"))
       pack_msg(send_buffer, "esc", username, mk_buffer);
     else
       pack_msg(send_buffer, "msg", username, mk_buffer);
