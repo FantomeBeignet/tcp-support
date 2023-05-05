@@ -170,8 +170,45 @@ int main(int argc, char *argv[]) {
             } else if (strcmp(unpacked_msg->msg_type, "msg") == 0) {
               if (clients[i] == 1) {
                 // Connected to BOT
-                if (FD_ISSET(i, &master)) {
-                  char *automatic_answer = "Dites m'en plus...";
+                if (strstr(unpacked_msg->content, "box") != NULL) {
+                  if (FD_ISSET(i, &master)) {
+                    char *automatic_answer = "Avant tout, avez vous essayé de "
+                                             "redémarrer votre box ?";
+                    char buff[2048];
+                    pack_msg(buff, "msg", "BOT", automatic_answer);
+                    if (send(i, buff, 2 + 4 + 32 + strlen(automatic_answer),
+                             0) == -1) {
+                      perror("send");
+                    }
+                  }
+                } else if (strstr(unpacked_msg->content, "internet") != NULL) {
+                  if (FD_ISSET(i, &master)) {
+                    char *automatic_answer = "Vous avez essayé de "
+                                             "mettre votre box dans du riz ?";
+                    char buff[2048];
+                    pack_msg(buff, "msg", "BOT", automatic_answer);
+                    if (send(i, buff, 2 + 4 + 32 + strlen(automatic_answer),
+                             0) == -1) {
+                      perror("send");
+                    }
+                  }
+                } else if (strstr(unpacked_msg->content, "television") !=
+                           NULL) {
+                  if (FD_ISSET(i, &master)) {
+                    char *automatic_answer =
+                        "Vous ne devriez pas regarder la télévision, c'est "
+                        "mauvais pour la santé. Mais essayez de débrancher "
+                        "votre box internet et de la rebrancher.";
+                    char buff[2048];
+                    pack_msg(buff, "msg", "BOT", automatic_answer);
+                    if (send(i, buff, 2 + 4 + 32 + strlen(automatic_answer),
+                             0) == -1) {
+                      perror("send");
+                    }
+                  }
+                } else if (FD_ISSET(i, &master)) {
+                  char *automatic_answer = "Je n'ai pas compris votre "
+                                           "problème, veuillez reformuler.";
                   char buff[2048];
                   pack_msg(buff, "msg", "BOT", automatic_answer);
                   if (send(i, buff, 2 + 4 + 32 + strlen(automatic_answer), 0) ==
@@ -185,7 +222,8 @@ int main(int argc, char *argv[]) {
                   char sendbuf[2048];
                   pack_uint16(sendbuf, msg_size);
                   memcpy(sendbuf + 2, buf, 4 + 32 + msg_size);
-                  if (send(target_fd, sendbuf, 2 + 4 + 32 + msg_size, 0) == -1) {
+                  if (send(target_fd, sendbuf, 2 + 4 + 32 + msg_size, 0) ==
+                      -1) {
                     perror("send");
                   }
                 }
@@ -209,7 +247,6 @@ int main(int argc, char *argv[]) {
                   perror("send");
                 }
               } else {
-                printf("%d\n", expert);
                 char *transaction = "Client en approche !";
                 char buff[2048];
                 pack_msg(buff, "msg", "BOT", transaction);
