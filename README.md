@@ -2,6 +2,11 @@
 
 TCP client/server app for multi level support, built for a 2nd year networking project at TELECOM Nancy
 
+### Authors
+
+- [Tom BENE](https://github.com/FantomeBeignet)
+- [Guillaume RICARD](https://github.com/CitelisIT)
+
 ## Getting Started
 
 ### Prerequisites
