@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
   char *end;
   unsigned long serv_port = strtoul(argv[2], &end, 10);
   if (strcmp(end, "\0")) {
-    fprintf(stderr, "%s is not a valid port number", argv[2]);
+    fprintf(stderr, "%s n'est pas un numéro de port valide", argv[2]);
     exit(1);
   }
   if (serv_port > 65535) {
-    fprintf(stderr, "%lu is not a valid port number", serv_port);
+    fprintf(stderr, "%lu n'est pas un numéro de port valide", serv_port);
     exit(1);
   }
   int clientSocket;
